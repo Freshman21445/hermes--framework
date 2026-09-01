@@ -1,0 +1,21 @@
+.PHONY: agent plugins server all install test clean
+
+agent:
+	zig build
+
+plugins:
+	cd plugins && $(MAKE)
+
+server:
+	cd server && go build -o hermes-server .
+
+all: agent plugins server
+
+install:
+	python scripts/install.py
+
+test:
+	cd server && go test ./...
+
+clean:
+	rm -f zig-out/bin/hermes server/hermes-server plugins/*.so
