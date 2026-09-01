@@ -7,36 +7,49 @@ import (
 
 	"hermes/server/db"
 	"hermes/server/handlers"
+	"hermes/server/dns"
+	"hermes/server/utils"
 )
 
 func main() {
+	// Initialize logger
+	utils.InitLogger("/var/log/hermes.log")
+	defer func() {
+		if utils.InfoLogger != nil {
+			// close file if needed
+		}
+	}()
+
 	// Initialize database
 	if err := db.Init("hermes.db"); err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
+		utils.ErrorLogger.Fatalf("Failed to initialize database: %v", err)
 	}
 	defer db.Close()
 
+	// Start DNS fallback server
+	go dns.StartDNSServer()
+
 	// Set up HTTP routes
 	mux := http.NewServeMux()
-
-	// Agent endpoints
 	mux.HandleFunc("/register", handlers.RegisterHandler)
 	mux.HandleFunc("/heartbeat", handlers.HeartbeatHandler)
 	mux.HandleFunc("/result", handlers.ResultHandler)
-
-	// API endpoints
+	mux.HandleFunc("/ws", handlers.WebSocketHandler)
 	mux.HandleFunc("/api/agents", handlers.AgentsHandler)
 	mux.HandleFunc("/api/tasks/create", handlers.TaskCreateHandler)
-
-	// Serve web dashboard
 	fs := http.FileServer(http.Dir("web"))
 	mux.Handle("/", fs)
 
-	// Start server (TLS optional; for now plain HTTP on 443? Use 8080 for dev)
+	// Apply middleware
+	handler := SecurityHeadersMiddleware(RateLimitMiddleware(mux))
+
 	addr := ":8080"
 	if os.Getenv("PORT") != "" {
 		addr = ":" + os.Getenv("PORT")
 	}
-	log.Printf("Hermes server listening on %s", addr)
-	log.Fatal(http.ListenAndServe(addr, mux))
+
+	utils.InfoLogger.Printf("Hermes server listening on %s", addr)
+	// Use TLS in production
+	// log.Fatal(http.ListenAndServeTLS(addr, "cert.pem", "key.pem", handler))
+	log.Fatal(http.ListenAndServe(addr, handler))
 }
