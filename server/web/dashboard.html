@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Hermes</h2>
+        <nav>
+            <a href="#" class="active" data-page="agents">Agents</a>
+            <a href="#" data-page="tasks">Tasks</a>
+            <a href="#" data-page="plugins">Plugins</a>
+        </nav>
+    </div>
+    <div class="main">
+        <header>
+            <h1>Agents</h1>
+        </header>
+        <section id="content">
+            <!-- Dynamic content will be injected here -->
+            <div id="agents-table-container">
+                <table id="agents-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>ID</th>
+                            <th>Hostname</th>
+                            <th>IP</th>
+                            <th>OS</th>
+                            <th>Last Seen</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="task-form-container" style="margin-top:20px;">
+                <h3>Create Task</h3>
+                <form id="task-form">
+                    <label>Agent ID:</label>
+                    <input type="text" id="agent-id" required>
+                    <label>Plugin:</label>
+                    <select id="plugin-select">
+                        <option value="system_info">system_info</option>
+                        <option value="file_integrity">file_integrity</option>
+                        <option value="network_scanner">network_scanner</option>
+                        <option value="example">example</option>
+                    </select>
+                    <label>Arguments (comma-separated):</label>
+                    <input type="text" id="plugin-args">
+                    <button type="submit">Send Task</button>
+                </form>
+            </div>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
