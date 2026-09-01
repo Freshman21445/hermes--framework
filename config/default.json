@@ -1,0 +1,6 @@
+{
+    "server_ip": "127.0.0.1",
+    "server_port": 443,
+    "dns_fallback": "hermes.local",
+    "heartbeat_interval": 30
+}
