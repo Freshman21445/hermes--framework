@@ -1,0 +1,7 @@
+zig-cache/
+zig-out/
+*.o
+*.so
+hermes.db
+/hermes
+/server/hermes-server
