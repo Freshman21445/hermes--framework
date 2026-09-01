@@ -1,0 +1,10 @@
+# Hermes Distributed Management Agent
+
+Hermes is a distributed management framework consisting of a lightweight Zig agent, a Go C2 server, and a C-based plugin system.
+
+## Architecture
+- **Agent** (Zig) – Lightweight, cross-compilable, supports TLS, plugins, heartbeat, and stealth.
+- **Server** (Go) – Manages agents, tasks, results, and provides a web dashboard.
+- **Plugins** (C) – Dynamically loaded shared libraries that execute tasks.
+
+## Directory Structure
